@@ -92,8 +92,7 @@ export function createRectTexture(scene, textureId = "rectTexture", width, heigh
 * @param {Number} borderAlpha - alpha del borde [0-1] (opcional)
 */
 export function createCircleTexture(scene, textureId = "circleTexture", radius,
-    fillColor = 0xffffff, fillAlpha = 1, borderThickness = 5, borderNormalColor = 0x000000, borderAlpha = 1) 
-{
+    fillColor = 0xffffff, fillAlpha = 1, borderThickness = 5, borderNormalColor = 0x000000, borderAlpha = 1) {
     if (!scene.textures.exists(textureId)) {
         let graphics = scene.add.graphics();
         graphics.fillStyle(fillColor, fillAlpha);
@@ -128,7 +127,7 @@ function prepareButtonInteraction(button, overrideOnClick = false) {
 * @param {Object, Array} targets - objetos que cambiar de color 
 * @param {Function} onClick - funcion a llamar al pulsar el boton
 * @param {Boolean} overrideOnClick - true si se quieren sustituir todos los callbacks que tuviera el objeto en su evento pointerdown, false en caso contrario 
-* @param {Number} scaleFactor - escala respecto de la escala del boton que crecera al pasar el puntero por encima
+* @param {Number} scaleFactor - factor para disminuir o aumentar la escala del boton al pasar el puntero por encima
 * @param {Boolean} smooth - si la animacion es progresiva o inmediata
 * @param {Number} duration - tiempo que dura la animacino
 */
@@ -195,7 +194,7 @@ export function tintAnimation(button, targets, onClick = () => { }, overrideOnCl
     let normalTint = hexToColor(normalTintColor);
     let hoverTint = hexToColor(hoverTintColor);
     let pressingTint = hexToColor(pressingTintColor);
-    
+
     Phaser.Actions.SetTint(targets, normalTintColor);
 
     button.on("pointerover", () => {
