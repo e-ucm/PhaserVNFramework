@@ -52,9 +52,9 @@ export default class ChoiceNode extends DialogNode {
         }
     }
 
-    translate(localizationManager, namespace, otherOptions = {}) {
+    translate(localizationManager, namespace) {
         // Obtiene el texto traducido de las opciones y lo guarda en la lista
-        this.choices = localizationManager.translate(this.fullId, namespace, otherOptions);
+        this.choices = localizationManager.translate(this.fullId, namespace);
 
         // Se sustituye usando las expresiones regulares
         this.choices.forEach((choice, index, choices) => {

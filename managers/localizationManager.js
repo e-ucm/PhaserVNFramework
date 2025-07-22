@@ -2,6 +2,7 @@ import Singleton from "../utils/singleton.js";
 import NodeReader from "../dialog/nodeReader.js";
 import EventDispatcher from "./eventDispatcher.js";
 import DefaultEventNames from "../utils/eventNames.js";
+import { completeMissingProperties } from "../utils/misc.js";
 
 export default class LocalizationManager extends Singleton {
     /**
@@ -18,6 +19,10 @@ export default class LocalizationManager extends Singleton {
         this.blackboards = new Set();
 
         this.dispatcher = EventDispatcher.getInstance();
+
+        this.context = {
+            returnObjects: true
+        };
     }
 
     init(i18n, nodeReader = new NodeReader()) {
@@ -99,7 +104,9 @@ export default class LocalizationManager extends Singleton {
     * @param {String, Number} value - valor con el que se sustituira la clave
     */
     setInterpolationValue(key, value) {
-        this.i18next.updateInterpolation(key, value)
+        if (key != "returnObjects") {
+            this.context[key] = value;
+        }
     }
 
 
@@ -129,13 +136,12 @@ export default class LocalizationManager extends Singleton {
     */
     translate(translationId, namespace, otherOptions = {}) {
         let options = { ...otherOptions };
-        if (options.ns == null) {
-            options.ns = namespace;
-        }
-        otherOptions.returnObjects = true;
+        options = completeMissingProperties(options, this.context);
+        options.ns = namespace;
 
         let str = this.i18next.t(translationId, options);
-
+        console.log(this.context);
+        
         // Si se ha obtenido algo
         if (str != null) {
             // Si el objeto obtenido no es un array,

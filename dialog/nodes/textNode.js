@@ -60,11 +60,11 @@ export default class TextNode extends DialogNode {
         this.textAdjusted = false;
     }
 
-    translate(localizationManager, namespace, otherOptions = {}) {
-        this.name = localizationManager.translate(this.character, "names", otherOptions);
+    translate(localizationManager, namespace) {
+        this.name = localizationManager.translate(this.character, "names");
 
         // Se obtiene el dialogo traducido
-        let translation = localizationManager.translate(this.fullId, namespace, otherOptions);
+        let translation = localizationManager.translate(this.fullId, namespace);
         
         // Si el texto no esta dividido en fragmentos, se guarda en el array de fragmentos
         // si no, el array de fragmentos es directamente el obtenido al traducir el nodo
