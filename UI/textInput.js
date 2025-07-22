@@ -85,7 +85,7 @@ export default class TextInput extends InteractiveContainer {
         this.allChildren = this.getAllChildren();
         tintAnimation(this, this.allChildren, () => {
             this.write();
-        }, true, normalTintColor, hoverTintColor, pressingTintColor);
+        }, true, false, normalTintColor, hoverTintColor, pressingTintColor);
     }
 
     activeRegularKeyboard() {

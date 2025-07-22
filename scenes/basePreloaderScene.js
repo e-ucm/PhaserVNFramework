@@ -1,8 +1,8 @@
 import SceneManager from "../managers/sceneManager.js";
-import LocalizationManager from "../managers/localizationManager.js";
-import EventDispatcher from "../managers/eventDispatcher.js";
 import BaseTrackerManager from "../managers/baseTrackerManager.js";
 import createSeriousGameTracker from "../lib/seriousGameTracker.js";
+import LocalizationManager from "../managers/localizationManager.js";
+import EventDispatcher from "../managers/eventDispatcher.js";
 
 export default class BasePreloaderScene extends Phaser.Scene {
     /**

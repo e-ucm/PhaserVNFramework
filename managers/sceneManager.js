@@ -110,19 +110,19 @@ export default class SceneManager extends Singleton {
             if (canReturn) {
                 // Dormir la escena actual
                 this.currentScene.scene.sleep();
-                // Se ejecuta la escena (sin reiniciarla si ya existia o creandola de 0 si no existia)
-                this.currentScene.scene.run(sceneKey, params);
-            }
-            else {
-                // Si no se puede volver a la escena anterior, se detienen todas las
-                // escenas que ya estaban creadas porque ya no van a hacer falta (a
-                // excepcion de la escena actual, por si se cambia a una escena a la
-                // que se podia regresar desde una escena a la que no se podra regresar)
-                this.clearRunningScenes();
-                this.currentScene.scene.start(sceneKey, params);
             }
 
+            // Se ejecuta la escena (sin reiniciarla si ya existia o creandola de 0 si no existia)
+            this.currentScene.scene.run(sceneKey, params);
             this.currentScene = this.currentScene.scene.get(sceneKey);
+
+            // Si no se puede volver a la escena anterior, se detienen todas las
+            // escenas que ya estaban creadas porque ya no van a hacer falta (a
+            // excepcion de la escena actual, por si se cambia a una escena a la
+            // que se podia regresar desde una escena a la que no se podra regresar)
+            if (!canReturn) {
+                this.clearRunningScenes();
+            }
 
             // Se guarda la escena a las escenas que estan ejecutandose
             this.runningScenes.add(this.currentScene);

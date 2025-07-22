@@ -1,5 +1,4 @@
 import DialogNode from "../dialogNode.js";
-import LocalizationManager from "../../managers/localizationManager.js";
 import DefaultEventNames from "../../utils/eventNames.js";
 import BaseTrackerManager from "../../managers/baseTrackerManager.js";
 
@@ -105,7 +104,6 @@ export default class TextNode extends DialogNode {
                 if (this.currDialog < this.dialogs.length) {
                     // TRACKER EVENT
                     this.trackerManager.sendInitializeDialog(this.name, this.dialogs[this.currDialog]);
-
 
                     this.dispatcher.dispatch(DefaultEventNames.updateTextNode, this);
                 }

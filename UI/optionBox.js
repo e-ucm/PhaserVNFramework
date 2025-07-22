@@ -105,7 +105,7 @@ export default class OptionBox extends ImageTextButton {
             this.add(this.textObj.debugRect);
         }
 
-        tintAnimation(this, this.list, onClick, true);
+        tintAnimation(this, this.list, onClick, true, true);
         this.setVisible(false);
     }
 }

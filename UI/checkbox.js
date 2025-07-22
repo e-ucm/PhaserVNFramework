@@ -55,7 +55,7 @@ export default class Checkbox extends InteractiveContainer {
 
         tintAnimation(this, this.checkbox.list, () => {
             this.toggleState();
-        }, true, normalTintColor, hoverTintColor, pressingTintColor);
+        }, true, false, normalTintColor, hoverTintColor, pressingTintColor);
     }
 
     /**
@@ -83,7 +83,7 @@ export default class Checkbox extends InteractiveContainer {
 
         tintAnimation(this, this.getAllChildren(), () => {
             this.toggleState();
-        }, true, this.normalTintColor, this.hoverTintColor, this.pressingTintColor);
+        }, true, false, this.normalTintColor, this.hoverTintColor, this.pressingTintColor);
     }
 
     /**
@@ -162,11 +162,11 @@ export default class Checkbox extends InteractiveContainer {
             if (!Phaser.Geom.Rectangle.Contains(overlapRect, pointerX, pointerY)) {
                 this.toggleState();
             }
-        }, this.normalTintColor, this.hoverTintColor, this.pressingTintColor);
+        }, true, false, this.normalTintColor, this.hoverTintColor, this.pressingTintColor);
 
         tintAnimation(this.image, allChildren, () => {
             this.toggleState();
-        }, this.normalTintColor, this.hoverTintColor, this.pressingTintColor);
+        }, true, false, this.normalTintColor, this.hoverTintColor, this.pressingTintColor);
     }
 
     setState(checked) {

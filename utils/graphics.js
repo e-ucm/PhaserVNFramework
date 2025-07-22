@@ -122,16 +122,36 @@ function prepareButtonInteraction(button, overrideOnClick = false) {
 }
 
 /**
+* Una vez terminada la animacion indicada, se ejecuta el onClick y se reactiva la interaccion si no es una interaccion unica
+* @param {Phaser.GameObject} button - elemento que reaccionara a los eventos del raton
+* @param {Phaser.Tweens.Tween} anim - tween que esperar a que termine
+* @param {Function} onClick - funcion a llamar al pulsar el boton
+* @param {Boolean} single - true si se puede volver a interactuar con el elemento, false en caso contrario
+*/
+function buttonInteractionComplete(button, anim, onClick, single) {
+    anim.on("complete", () => {
+        if (!single) {
+            button.setInteractive();
+        }
+
+        if (onClick != null && typeof onClick == "function") {
+            onClick();
+        }
+    });
+}
+
+/**
 * Anadir animacion de cambio de color al pasar y quitar el raton por encima
 * @param {Phaser.GameObject} button - elemento que reaccionara a los eventos del raton
 * @param {Object, Array} targets - objetos que cambiar de color 
 * @param {Function} onClick - funcion a llamar al pulsar el boton
 * @param {Boolean} overrideOnClick - true si se quieren sustituir todos los callbacks que tuviera el objeto en su evento pointerdown, false en caso contrario 
+* @param {Boolean} single - true si se puede volver a interactuar con el elemento, false en caso contrario
 * @param {Number} scaleFactor - factor para disminuir o aumentar la escala del boton al pasar el puntero por encima
 * @param {Boolean} smooth - si la animacion es progresiva o inmediata
 * @param {Number} duration - tiempo que dura la animacino
 */
-export function growAnimation(button, targets, onClick = () => { }, overrideOnClick = false, scaleFactor = 1.1, smooth = true, duration = 20) {
+export function growAnimation(button, targets, onClick = () => { }, overrideOnClick = false, single = false, scaleFactor = 1.1, smooth = true, duration = 20) {
     prepareButtonInteraction(button, overrideOnClick);
 
     let originalScale = button.scale;
@@ -167,12 +187,7 @@ export function growAnimation(button, targets, onClick = () => { }, overrideOnCl
         });
 
         // Al terminar la animacion se ejecucta el onClick
-        anim.on("complete", () => {
-            button.setInteractive();
-            if (onClick != null && typeof onClick == "function") {
-                onClick();
-            }
-        });
+        buttonInteractionComplete(button, anim, onClick, single);
     });
 }
 
@@ -183,12 +198,13 @@ export function growAnimation(button, targets, onClick = () => { }, overrideOnCl
 * @param {Object, Array} targets - objetos que cambiar de color 
 * @param {Function} onClick - funcion a llamar al pulsar el boton
 * @param {Boolean} overrideOnClick - true si se quieren sustituir todos los callbacks que tuviera el objeto en su evento pointerdown, false en caso contrario 
+* @param {Boolean} single - true si se puede volver a interactuar con el elemento, false en caso contrario
 * @param {Number} normalTintColor - valor hex del color normal (opcional)
 * @param {Number} hoverTintColor - valor hex del color al pasar el puntero por encima (opcional)
 * @param {Number} pressingTintColor - valor hex del color al pulsar el boton (opcional)
 * @param {Number} duration - tiempo que dura la animacino
 */
-export function tintAnimation(button, targets, onClick = () => { }, overrideOnClick = false, normalTintColor = 0xffffff, hoverTintColor = 0xd9d9d9, pressingTintColor = 0x969696, duration = 50) {
+export function tintAnimation(button, targets, onClick = () => { }, overrideOnClick = false, single = false, normalTintColor = 0xffffff, hoverTintColor = 0xd9d9d9, pressingTintColor = 0x969696, duration = 50) {
     prepareButtonInteraction(button, overrideOnClick);
 
     let normalTint = hexToColor(normalTintColor);
@@ -230,7 +246,7 @@ export function tintAnimation(button, targets, onClick = () => { }, overrideOnCl
 
     button.on("pointerdown", () => {
         button.disableInteractive();
-        let fadeColor = button.scene.tweens.addCounter({
+        let anim = button.scene.tweens.addCounter({
             targets: button,
             from: 0,
             to: 100,
@@ -246,11 +262,6 @@ export function tintAnimation(button, targets, onClick = () => { }, overrideOnCl
         });
 
         // Al terminar la animacion se ejecucta el onClick
-        fadeColor.on("complete", () => {
-            button.setInteractive();
-            if (onClick != null && typeof onClick == "function") {
-                onClick();
-            }
-        });
+        buttonInteractionComplete(button, anim, onClick, single);
     });
 }

@@ -1,19 +1,105 @@
 import Singleton from "../utils/singleton.js";
-import Blackboard from "../utils/blackboard.js";
+import NodeReader from "../dialog/nodeReader.js";
+import EventDispatcher from "./eventDispatcher.js";
+import DefaultEventNames from "../utils/eventNames.js";
 
 export default class LocalizationManager extends Singleton {
-    constructor() {
-        super("LocalizationManager");
+    /**
+    * Clase base para la gestion de todos los textos localizados, tanto de dialogos como de traducciones sueltas  
+    * @param {String} name - nombre de la clase. Se usa solo para el mensaje de la constructora (opcional) 
+    */
+    constructor(name = "LocalizationManager") {
+        super(name);
 
         this.i18next = null;
 
         // Blackboards de los que se sacaran las variables para el reempalzo de expresiones regulares
         // si alguna clave coincide, se guardara el valor que tenga dicha clave en la ultima blackboard
         this.blackboards = new Set();
+
+        this.dispatcher = EventDispatcher.getInstance();
     }
 
-    init(i18n) {
+    init(i18n, nodeReader = new NodeReader()) {
         this.i18next = i18n;
+        this.nodeReader = nodeReader;
+    }
+
+    /**
+    * Envia el evento de comenzar a procesar el nodo
+    * @param {DialogNode} node - nodo a procesar 
+    * @param {Function} onProcessed - funcion llamada cuando el nodo se procesa (si no se procesa por cualquier razon, no se llama)
+    */
+    setNode(node, onProcessed = () => { }) {
+        this.dispatcher.dispatch(DefaultEventNames.startDialogNode, { node: node, onProcessed: onProcessed });
+    }
+
+
+    /**
+    * Lee los nodos con el nodeReader y los traduce
+    * @param {Phaser.Scene} scene - escena en la que se crea el nodo
+    * @param {Object} fullJson - objeto json donde estan los nodos 
+    * @param {String} namespace - nombre del archivo de localizacion del que se va a leer 
+    * @param {String} objectName - nombre del objeto en el que esta el dialogo, si es que el json contiene varios dialogos de distintos objetos (opcional)
+    * @param {Object} otherOptions - parametros que pasarle a i18n (opcional) 
+    * @returns {DialogNode} - nodo raiz de los nodos leidos
+    */
+    readNodes(scene, file, namespace, objectName = "", otherOptions = {}) {
+        let nodes = this.nodeReader.readNodes(scene, file, namespace, objectName);
+
+        nodes.forEach((node) => {
+            node.translate(this, namespace, otherOptions);
+        });
+        return nodes.get("root");
+    }
+
+
+    /**
+    * Cambia el idioma actual de la aplicacion
+    * @param {String} language - Codigo del idioma a establecer (por ejemplo,"en", "es", "fr").
+    */
+    changeLanguage(language) {
+        this.i18next.changeLanguage(language);
+    }
+
+    /**
+    * Cambia (o anade si no existia antes) el valor de la interpolacion (que permite que los textos tengan valores dinamicos en las traducciones)
+    * 
+    * Ejemplo:
+    *   {
+    *       "text": "I have {{number}} pencils"
+    *   }
+    *   key: number, value: 10
+    *       --> "I have 10 pencils"
+    * 
+    * 
+    * Si la key es context o count, se utilizaran variaciones de genero o numero de manera respectiva
+    * 
+    * Ejemplo:
+    *   {
+    *       "text_male": "Boyfriend",
+    *       "text_female": "Girlfriend",
+    *       "text_male_one": "A boyfriend",
+    *       "text_female_one": "A girlfriend",
+    *       "text_male_other": "{{count}} boyfriends",
+    *       "text_female_other": "{{count}} girlfriends"
+    *   }
+    *   key: context, value: male
+    *       --> "Boyfriend"
+    * 
+    *   key: context, value: male
+    *   key: count, value 1
+    *       --> "A boyfriend"
+    * 
+    *   key: context, value: female
+    *   key: count, value 10
+    *       --> "10 girlfriends"
+    *  
+    * @param {String} key - clave que se sustituira en el texto
+    * @param {String, Number} value - valor con el que se sustituira la clave
+    */
+    setInterpolationValue(key, value) {
+        this.i18next.updateInterpolation(key, value)
     }
 
 
@@ -33,6 +119,7 @@ export default class LocalizationManager extends Singleton {
         this.blackboards.delete(blackboard);
     }
 
+
     /**
     * Obtiene el texto traducido
     * @param {String} translationId - id completa del nodo en el que mirar
@@ -41,14 +128,14 @@ export default class LocalizationManager extends Singleton {
     * @returns {String / Array } - texto o array con los textos traducidos
     */
     translate(translationId, namespace, otherOptions = {}) {
-        let options = { ... otherOptions};
+        let options = { ...otherOptions };
         if (options.ns == null) {
             options.ns = namespace;
         }
         otherOptions.returnObjects = true;
 
         let str = this.i18next.t(translationId, options);
-        
+
         // Si se ha obtenido algo
         if (str != null) {
             // Si el objeto obtenido no es un array,
@@ -227,14 +314,4 @@ export default class LocalizationManager extends Singleton {
         result += inputText.slice(lastEndIndex);
         return result;
     }
-
-    /**
-    * Cambia el idioma actual de la aplicacion
-    *
-    * @param {String} language - Codigo del idioma a establecer (por ejemplo,"en", "es", "fr").
-    */
-    changeLanguage(language) {
-        this.i18next.changeLanguage(language);
-    }
-
 }

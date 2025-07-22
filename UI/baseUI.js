@@ -33,24 +33,48 @@ export default class BaseUI extends BaseScene {
 
         this.textbox = new DialogBox(this, this.textboxConfig, this.nameBoxConfig, this.textConfig, this.nameTextConfig);
 
-        this.configureTextboxEvents();
-        this.configureChoicesEvents();
+        
+        // Eventos de la UI
 
-        // Si llega un evento de que se han acabado los nodos, desactiva la caja y 
-        // envia el evento de eliminar el nodo actual cuando termina la animacion
-        this.dispatcher.add(DefaultEventNames.endNodes, this, () => {
-            this.bgBlock.disableInteractive();
+        this.currNode = null;
+        // Si llega un evento de que ha empezado un nodo, se bloquea el fondo y se guarda el nodo actual
+        // para que no se procesen mas nodos hasta que se terminen de procesar todos los nodos pendientes
+        this.dispatcher.add(DefaultEventNames.startDialogNode, this, (params) => {
+            if (this.currNode == null && params.node != null) {
+                this.bgBlock.setInteractive();
 
+                if (gameDebug.enable) {
+                    console.log("Starting node:", params.node);
+                }
+
+                this.currNode = params.node;
+                this.currNode.processNode();
+
+                params.onProcessed();
+            }
+            this.currNode = params.node;
+            // else {
+            //     console.warn("Processing node:", node);
+            // }
+        });
+        
+        // Si llega un evento de que se han acabado los nodos, desactiva la caja y se libera el nodo actual
+        this.dispatcher.add(DefaultEventNames.endDialogNodes, this, () => {
             this.textbox.activate(false, () => {
-                this.dispatcher.dispatch(DefaultEventNames.clearNodes);
+                this.bgBlock.disableInteractive();
+                this.currNode = null;
             });
         });
+
+        this.configureTextboxEvents();
+        this.configureChoicesEvents();
     }
 
     shutdown() {
         if (this.dispatcher != null) {
             this.textbox.activate(false, () => {
-                this.dispatcher.dispatch(DefaultEventNames.clearNodes);
+                this.bgBlock.disableInteractive();
+                this.currNode = null;
             });
         }
         super.shutdown();
@@ -61,9 +85,6 @@ export default class BaseUI extends BaseScene {
 
         // Si llega un evento de empezar nodo de texto, comienza a procesarlo
         this.dispatcher.add(DefaultEventNames.startTextNode, this, (node) => {
-            this.bgBlock.setInteractive();
-
-
             // Recorre todos los fragmentos obtenidos y los divide (por si
             // el texto es demasiado largo y no cabe en la caja de texto). 
             if (!node.textAdjusted) {
@@ -198,8 +219,6 @@ export default class BaseUI extends BaseScene {
     * @param {ChoiceNode} node - nodo de eleccion con el array de opciones 
     */
     createOptions(node) {
-        this.bgBlock.setInteractive();
-
         // Recorre todos los textos de las opciones
         for (let i = 0; i < node.choices.length; i++) {
             // Crea una OptionBox cuyo onClick establece como siguiente nodo el correspondiente al indice de la opcion elegida y elimina el resto de opciones
@@ -209,6 +228,7 @@ export default class BaseUI extends BaseScene {
                 this.trackerManager.sendSelectChoice(node.fullId, node.choices[i]);
 
                 this.dispatcher.dispatch(DefaultEventNames.selectChoiceNode, i);
+
                 this.removeOptions();
             }, this.optionBoxConfig, this.optionsTextConfig);
 
@@ -224,9 +244,8 @@ export default class BaseUI extends BaseScene {
     * Elimina las opciones
     */
     removeOptions() {
-        // Recorre cada opcion del array de OptionBox
+        // Recorre cada opcion del array de optionBoxes ocultando la opcion y destruyendola cuando la termina de ocultar,
         this.optionBoxes.forEach((option) => {
-            // Oculta la opcion y cuando la termina de ocultar, destruye el objeto
             option.activate(false, () => {
                 option.destroy();
                 this.onOptionRemoval();

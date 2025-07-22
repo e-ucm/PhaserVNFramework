@@ -54,7 +54,7 @@ export default class DialogNode {
             }, this.nextDelay);
         }
         else {
-            this.dispatcher.dispatch(DefaultEventNames.endNodes);
+            this.dispatcher.dispatch(DefaultEventNames.endDialogNodes);
         }
     }
 
