@@ -33,7 +33,7 @@ export default class BaseUI extends BaseScene {
 
         this.textbox = new DialogBox(this, this.textboxConfig, this.nameBoxConfig, this.textConfig, this.nameTextConfig);
 
-        
+
         // Eventos de la UI
 
         this.currNode = null;
@@ -57,7 +57,7 @@ export default class BaseUI extends BaseScene {
             //     console.warn("Processing node:", node);
             // }
         });
-        
+
         // Si llega un evento de que se han acabado los nodos, desactiva la caja y se libera el nodo actual
         this.dispatcher.add(DefaultEventNames.endDialogNodes, this, () => {
             this.textbox.activate(false, () => {
@@ -77,6 +77,7 @@ export default class BaseUI extends BaseScene {
                 this.currNode = null;
             });
         }
+        this.removeOptions();
         super.shutdown();
     }
 
