@@ -3,7 +3,7 @@ import AnimatedContainer from "./animatedContainer.js";
 
 export default class InteractiveContainer extends AnimatedContainer {
     /**
-    * Clase base para los elementos de dialogo, con metodos para activar/desactivar el objeto y calcular su rectangulo de colision
+    * Clase base para los contenedores interactuables, con metodos para calcular su rectangulo de colision
     * @extends AnimatedContainer
     * @param {Phaser.Scene} scene - escena a la que pertenece
     * @param {Number} x - posicion x (opcional)

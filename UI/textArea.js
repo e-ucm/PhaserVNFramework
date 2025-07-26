@@ -89,24 +89,7 @@ export default class TextArea extends Phaser.GameObjects.Text {
             let fontSize = parseInt(textConfig.fontSize.replace("px", ""));
 
             let fontSizes = range(1, fontSize - 1, reduction);
-
-            // function adjustFontSizeAux(fontSizes, ini, fin, text) {
-            //     let n = fin - ini;
-            //     if (n == 1) {
-            //         return fontSizes[ini];
-            //     }
-            //     else {
-            //         let mitad = Math.floor((fin + ini) / 2);
-            //         this.setFontSize(fontSizes[mitad]);
-            //         if (this.fits(text)) {
-            //             return adjustFontSizeAux.call(this, fontSizes, mitad, fin, text);
-            //         }
-            //         else {
-            //             return adjustFontSizeAux.call(this, fontSizes, ini, mitad, text);
-            //         }
-            //     }
-            // }
-
+            
             if (this.maxWidth > 0 && this.maxHeight > 0 && text != "" && !this.fits(text)) {
                 let ini = 0;
                 let end = fontSizes.length - 1;
@@ -126,20 +109,7 @@ export default class TextArea extends Phaser.GameObjects.Text {
 
                 this.setFontSize(fontSizes[ini]);
             }
-
-            // while (this.maxWidth > 0 && this.maxHeight > 0 && text != "" && !this.fits(text)) {
-            //     fontSize -= reduction;
-            //     this.setFontSize(fontSize);
-            //     // this.setSize(this.getBounds().width, this.getBounds().height);
-            // }
-
-            // if (gameDebug.enableText) {
-            //     this.setInteractive();
-            //     this.scene.input.enableDebug(this, gameDebug.textColor);
-            //     this.disableInteractive();
-            // }
         }
-        // console.log(fontSize);
     }
 
     /**

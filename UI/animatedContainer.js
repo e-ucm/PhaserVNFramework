@@ -1,6 +1,6 @@
 export default class AnimatedContainer extends Phaser.GameObjects.Container {
     /**
-    * Clase que extiende Container para agregar controles de visibilidad con animaciones
+    * Clase que extiende Container para agregar animaciones al activar/desactivar la visibilidad
     * @extends Phaser.GameObjects.Container
     * @param {Phaser.Scene} scene - escena a la que pertenece
     * @param {Number} x - posicion x (opcional)
