@@ -140,7 +140,6 @@ export default class LocalizationManager extends Singleton {
         options.ns = namespace;
 
         let str = this.i18next.t(translationId, options);
-        console.log(this.context);
         
         // Si se ha obtenido algo
         if (str != null) {
