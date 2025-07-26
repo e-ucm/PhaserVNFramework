@@ -37,6 +37,7 @@ export default class BaseUI extends BaseScene {
         // Eventos de la UI
 
         this.currNode = null;
+        this.onNodeComplete = () => { };
         // Si llega un evento de que ha empezado un nodo, se bloquea el fondo y se guarda el nodo actual
         // para que no se procesen mas nodos hasta que se terminen de procesar todos los nodos pendientes
         this.dispatcher.add(DefaultEventNames.startDialogNode, this, (params) => {
@@ -50,7 +51,10 @@ export default class BaseUI extends BaseScene {
                 this.currNode = params.node;
                 this.currNode.processNode();
 
-                params.onProcessed();
+                params.onStart();
+
+                // Se reinicia la funcion de completar de procesar los nodos 
+                this.onNodeComplete = () => { };
             }
             this.currNode = params.node;
             // else {
@@ -60,10 +64,7 @@ export default class BaseUI extends BaseScene {
 
         // Si llega un evento de que se han acabado los nodos, desactiva la caja y se libera el nodo actual
         this.dispatcher.add(DefaultEventNames.endDialogNodes, this, () => {
-            this.textbox.activate(false, () => {
-                this.bgBlock.disableInteractive();
-                this.currNode = null;
-            });
+            this.endDialogNodes();
         });
 
         this.configureTextboxEvents();
@@ -71,14 +72,26 @@ export default class BaseUI extends BaseScene {
     }
 
     shutdown() {
-        if (this.dispatcher != null) {
-            this.textbox.activate(false, () => {
-                this.bgBlock.disableInteractive();
-                this.currNode = null;
-            });
-        }
-        this.removeOptions();
+        this.endDialogNodes();
         super.shutdown();
+    }
+
+    endDialogNodes() {
+        this.currNode = null;
+
+        // Se hace que la funcion llamada al completar el nodo desactive el bloqueo del fondo
+        this.onNodeComplete = () => {
+            this.bgBlock.disableInteractive();
+        };
+
+        // Se ocultan la caja de texto y las cajas de opciones (si es que alguna de ellas esta activa)
+        // Al terminar la animacion, se llama a onNodeComplete, que por defecto desbloqueara el fondo
+        // a no ser que se haya iniciado otro nodo justo al terminar de procesar el ultimo nodo, en cuyo
+        // caso la funcion se habra reiniciado para no hacer nada 
+        this.textbox.activate(false, () => {
+            this.onNodeComplete();
+        });
+        this.removeOptions();
     }
 
     configureTextboxEvents() {

@@ -33,10 +33,10 @@ export default class LocalizationManager extends Singleton {
     /**
     * Envia el evento de comenzar a procesar el nodo
     * @param {DialogNode} node - nodo a procesar 
-    * @param {Function} onProcessed - funcion llamada cuando el nodo se procesa (si no se procesa por cualquier razon, no se llama)
+    * @param {Function} onStart - funcion llamada cuando el nodo se procesa (si no se procesa por cualquier razon, no se llama)
     */
-    setNode(node, onProcessed = () => { }) {
-        this.dispatcher.dispatch(DefaultEventNames.startDialogNode, { node: node, onProcessed: onProcessed });
+    setNode(node, onStart = () => { }) {
+        this.dispatcher.dispatch(DefaultEventNames.startDialogNode, { node: node, onStart: onStart });
     }
 
 

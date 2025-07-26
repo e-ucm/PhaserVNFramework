@@ -50,10 +50,11 @@ export default class AnimatedContainer extends Phaser.GameObjects.Container {
             duration = 0;
         }
 
-
-        // Fuerza la opacidad a la inicial
-        this.setVisible(true);
-        this.setAlpha(initAlpha);
+        if (initAlpha != endAlpha) {
+            // Fuerza la opacidad a la inicial
+            this.setVisible(true);
+            this.setAlpha(initAlpha);
+        }
 
         // Hace la animacion
         this.fadeAnim = this.scene.tweens.add({
