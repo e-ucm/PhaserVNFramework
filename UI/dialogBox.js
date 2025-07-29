@@ -21,7 +21,7 @@ export default class DialogBox extends InteractiveContainer {
         this.bgBlock = scene.add.zone(0, 0, scene.CANVAS_WIDTH, scene.CANVAS_HEIGHT).setOrigin(0, 0);
         this.add(this.bgBlock);
 
-        let DEFAULT_TEXTBOX_CONFIG = {
+        const DEFAULT_TEXTBOX_CONFIG = {
             imgX: this.CANVAS_WIDTH / 2,
             imgY: this.CANVAS_HEIGHT * 0.77,
             imgAtlas: "",
@@ -44,7 +44,7 @@ export default class DialogBox extends InteractiveContainer {
             centered: false
         }
 
-        let DEFAULT_NAMEBOX_CONFIG = {
+        const DEFAULT_NAMEBOX_CONFIG = {
             imgX: 310,
             imgY: 550,
             imgAtlas: "",

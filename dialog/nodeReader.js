@@ -39,7 +39,7 @@ export default class NodeReader {
                     return new EventNode(scene, objectJson);
                 }
             ],
-        ])
+        ]);
     }
 
     /**

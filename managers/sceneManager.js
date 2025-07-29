@@ -11,7 +11,7 @@ export default class SceneManager extends Singleton {
 
         this.currentScene = null;
         this.runningScenes = new Set();
-        this.paralellScenes = new Set();
+        this.parallelScenes = new Set();
 
         this.fading = false;
 
@@ -46,10 +46,10 @@ export default class SceneManager extends Singleton {
     * 
     * @param {String} sceneKey - key de la escena a ejecutar en paralelo
     */
-    runInParalell(sceneKey) {
+    runInParallel(sceneKey) {
         this.currentScene.scene.launch(sceneKey);
         let scene = this.currentScene.scene.get(sceneKey);
-        this.paralellScenes.add(scene);
+        this.parallelScenes.add(scene);
     }
 
     /**
@@ -150,11 +150,13 @@ export default class SceneManager extends Singleton {
         }
     }
 
+    
     /**
-    * Detener y borrar todas las escenas activas
+    * Detener y borrar todas las escenas indicadas
+    * @param {Array} sceneArray - array con las escenas a detener
     */
-    clearRunningScenes() {
-        this.runningScenes.forEach(sc => {
+    clearScenes(sceneArray) {
+        sceneArray.forEach(sc => {
             if (sc != this.currentScene) {
                 // Si la escena tiene el metodo shutdown, se llama a su shutdown antes de detenerla 
                 if (sc.shutdown != null && typeof sc.shutdown === "function") {
@@ -163,8 +165,17 @@ export default class SceneManager extends Singleton {
                 this.stopScene(sc);
             }
         });
-        this.runningScenes.clear();
+        sceneArray.clear();
     }
+
+    clearRunningScenes() {
+        this.clearScenes(this.runningScenes);
+    }
+
+    clearParallelScenes() {
+        this.clearScenes(this.parallelScenes);
+    }
+
 
     /**
     * Hacer solo fade out

@@ -15,7 +15,7 @@ export default class OptionBox extends ImageTextButton {
     * @param {Object} textConfig - configuracion del texto de la caja (opcional)
     */
     constructor(scene, index, totalOpts, text, onClick = {}, boxConfig = {}, textConfig = {}) {
-        let DEFAULT_BOX_CONFIG = {
+        const DEFAULT_BOX_CONFIG = {
             collectiveAlignY: 1,
             collectiveTopMargin: 0,
 
