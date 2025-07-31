@@ -121,6 +121,68 @@ function prepareButtonInteraction(button, overrideOnClick = false) {
     }
 }
 
+
+/**
+* Anadir animacion de mostrar/ocultar un objeto con un fade in/out
+* @param {Phaser.GameObject, Array} targets - elemento/s que haran la animacion
+* @param {Boolean} makeVisible - true si se quiere mostrar el objetivo, false en caso contrario
+* @param {Number} duration - duracion en ms que durara el fade (opcional)
+* @param {Phaser.Math.Easing, String} ease - funcion de suavizado que aplicar a la animacion (opcional)
+* @returns {Phaser.Tweens.Tween} - instancia de la animacion reproducida (por si se quieren anadir eventos que reaccionen a ella)
+*/
+export function fadeAnimation(targets, makeVisible, duration = 150, ease = Phaser.Math.Easing.Linear) {
+    let isArray = false;
+    let mainTarget = targets;
+    let visible = false;
+
+    if (Array.isArray(targets)) {
+        isArray = true;
+        if (targets.length > 0) {
+            mainTarget = targets[0];
+            visible = mainTarget.visible;
+        }
+    }
+    else {
+        visible = targets.visible;
+    }
+
+    // Configura el alpha y la duracion segun la visibilidad del objetivo y el estado al que se quiere pasar
+    let initAlpha = 0;
+    let endAlpha = 1;
+    if (!makeVisible) {
+        initAlpha = 1;
+        endAlpha = 0;
+    }
+    if (makeVisible == visible) {
+        initAlpha = endAlpha;
+        duration = 0;
+    }
+    else {
+        // Fuerza la opacidad a la inicial
+        if (isArray) {
+            targets.forEach((elem) => {
+                elem.setVisible(true);
+                elem.setAlpha(initAlpha);
+            });
+        }
+        else {
+            targets.setVisible(true);
+            targets.setAlpha(initAlpha);
+        }
+    }
+
+    let anim = mainTarget.scene.tweens.add({
+        targets: targets,
+        alpha: { from: initAlpha, to: endAlpha },
+        ease: ease,
+        duration: duration,
+        repeat: 0,
+    });
+
+
+    return anim;
+}
+
 /**
 * Una vez terminada la animacion indicada, se ejecuta el onClick y se reactiva la interaccion si no es una interaccion unica
 * @param {Phaser.GameObject} button - elemento que reaccionara a los eventos del raton
@@ -143,7 +205,7 @@ function buttonInteractionComplete(button, anim, onClick, single) {
 /**
 * Anadir animacion de cambio de color al pasar y quitar el raton por encima
 * @param {Phaser.GameObject} button - elemento que reaccionara a los eventos del raton
-* @param {Object, Array} targets - objetos que cambiar de color 
+* @param {Phaser.GameObject, Array} targets - objetos que cambiar de color 
 * @param {Function} onClick - funcion a llamar al pulsar el boton
 * @param {Boolean} overrideOnClick - true si se quieren sustituir todos los callbacks que tuviera el objeto en su evento pointerdown, false en caso contrario 
 * @param {Boolean} single - true si se puede volver a interactuar con el elemento, false en caso contrario
@@ -195,7 +257,7 @@ export function growAnimation(button, targets, onClick = () => { }, overrideOnCl
 /**
 * Anadir animacion de cambio de color al pasar y quitar el raton por encima
 * @param {Phaser.GameObject} button - elemento que reaccionara a los eventos del raton
-* @param {Object, Array} targets - objetos que cambiar de color 
+* @param {Phaser.GameObject, Array} targets - objetos que cambiar de color 
 * @param {Function} onClick - funcion a llamar al pulsar el boton
 * @param {Boolean} overrideOnClick - true si se quieren sustituir todos los callbacks que tuviera el objeto en su evento pointerdown, false en caso contrario 
 * @param {Boolean} single - true si se puede volver a interactuar con el elemento, false en caso contrario

@@ -1,3 +1,5 @@
+import { fadeAnimation } from "../utils/graphics.js";
+
 export default class AnimatedContainer extends Phaser.GameObjects.Container {
     /**
     * Clase que extiende Container para agregar animaciones al activar/desactivar la visibilidad
@@ -30,40 +32,7 @@ export default class AnimatedContainer extends Phaser.GameObjects.Container {
     * @param {Number} delay - tiempo en ms que tarda en llamarse a onComplete (opcional)
     */
     activate(active, onComplete = () => { }, delay = 0) {
-        let initAlpha = 0;
-        let endAlpha = 1;
-        let duration = this.animConfig.fadeTime
-
-        if (!active) {
-            initAlpha = 1;
-            endAlpha = 0;
-        }
-
-        if (!active && !this.visible) {
-            initAlpha = 0;
-            endAlpha = 0;
-            duration = 0;
-        }
-        else if (active && this.visible) {
-            initAlpha = 1;
-            endAlpha = 1;
-            duration = 0;
-        }
-
-        if (initAlpha != endAlpha) {
-            // Fuerza la opacidad a la inicial
-            this.setVisible(true);
-            this.setAlpha(initAlpha);
-        }
-
-        // Hace la animacion
-        this.fadeAnim = this.scene.tweens.add({
-            targets: this,
-            alpha: { from: initAlpha, to: endAlpha },
-            ease: this.animConfig.fadeEase,
-            duration: duration,
-            repeat: 0,
-        });
+        this.fadeAnim = fadeAnimation(this, active);
 
         // Al terminar la animacion, se ejecuta el onComplete si es una funcion valida
         this.fadeAnim.on("complete", () => {
