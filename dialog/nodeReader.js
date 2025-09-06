@@ -100,7 +100,7 @@ export default class NodeReader {
                 let type = objectJson[id].type;
 
                 // Se guarda el resto de parametros y se guarda en el mapa de nodos por su id
-                if (this.nodeConstructors.get(type) != null) {
+                if (this.nodeConstructors.has(type)) {
                     let node = this.nodeConstructors.get(type)(scene, objectJson[id]);
                     node.id = id;
                     node.fullId = fullId;

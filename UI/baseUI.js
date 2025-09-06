@@ -119,7 +119,7 @@ export default class BaseUI extends BaseScene {
 
         // Si llega un evento de actualizar el texto, lo cambia en la caja de texto
         this.dispatcher.add(DefaultEventNames.updateTextNode, this, (node) => {
-            this.textbox.setDialog(node.name, node.character, node.dialogs[node.currDialog]);
+            this.textbox.setDialog(node.name, node.character, node.dialogs[node.currDialog], node.centered);
         });
     }
 
@@ -128,14 +128,14 @@ export default class BaseUI extends BaseScene {
         // se desactiva la caja y se vuelve a activar con el nombre nuevo
         if (this.textbox.visible && this.textbox.lastCharacter != node.character) {
             this.textbox.activate(false, () => {
-                this.textbox.setDialog(node.name, node.character, node.dialogs[node.currDialog]);
+                this.textbox.setDialog(node.name, node.character, node.dialogs[node.currDialog], node.centered);
                 this.textbox.activate(true);
             })
         }
         // Si no, si la caja no era visible o el personaje es el mismo, se activa
         // directamente con el nombre nuevo (si ya estaba activa, no hara la animacion)
         else {
-            this.textbox.setDialog(node.name, node.character, node.dialogs[node.currDialog]);
+            this.textbox.setDialog(node.name, node.character, node.dialogs[node.currDialog], node.centered);
             this.textbox.activate(true);
         }
     }

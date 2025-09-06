@@ -153,12 +153,15 @@ export function fadeAnimation(targets, makeVisible, duration = 150, ease = Phase
         initAlpha = 1;
         endAlpha = 0;
     }
+    
+    // Si la visibilidad que se le va a poner al objeto es la misma que la que ya tiene, 
+    // el alpha inicial y final seran iguales y la duracion de la animacion sera 0
     if (makeVisible == visible) {
         initAlpha = endAlpha;
         duration = 0;
     }
+    // Si no, fuerza la opacidad a la inicial
     else {
-        // Fuerza la opacidad a la inicial
         if (isArray) {
             targets.forEach((elem) => {
                 elem.setVisible(true);
@@ -178,7 +181,16 @@ export function fadeAnimation(targets, makeVisible, duration = 150, ease = Phase
         duration: duration,
         repeat: 0,
     });
-
+    anim.on("complete", () => {
+        if (isArray) {
+            targets.forEach((elem) => {
+                elem.setVisible(makeVisible);
+            });
+        }
+        else {
+            targets.setVisible(makeVisible);
+        }
+    });
 
     return anim;
 }

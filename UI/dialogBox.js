@@ -39,9 +39,7 @@ export default class DialogBox extends InteractiveContainer {
 
             useAdvancedWrap: true,
             realWidth: this.CANVAS_WIDTH * 0.72,
-            realHeight: 180,
-
-            centered: false
+            realHeight: 180
         }
 
         const DEFAULT_NAMEBOX_CONFIG = {
@@ -177,9 +175,21 @@ export default class DialogBox extends InteractiveContainer {
     * @param {String} name - nombre del personaje
     * @param {String} character - id del personaje
     * @param {String} text - texto a escribir
-    * @param {Boolean} animate - true si se quiere mostrar el texto letra a letra, false en caso contrario
+    * @param {Boolean} centered - true si se quiere mostrar el texto centrado, false en caso contrario
+    * @param {Boolean} animate - true si se quiere mostrar el texto letra a letra, false en caso contrario (opcional)
     */
-    setDialog(name, character, text, animate = true) {
+    setDialog(name, character, text, centered, animate = true) {
+        if (centered) {
+            this.textObj.setAlign("center");
+            this.textObj.setOrigin(0.5, 0.5);
+            this.textObj.setPosition(this.textboxConfig.textX + this.textboxConfig.realWidth / 2, this.textboxConfig.textY + this.textboxConfig.realHeight / 2);
+        }
+        else {
+            this.textObj.setStyle(this.textConfig);
+            this.textObj.setOrigin(this.textboxConfig.textOriginX, this.textboxConfig.textOriginY);
+            this.textObj.setPosition(this.textboxConfig.textX, this.textboxConfig.textY);
+        }
+        
         // Cambia el nombre
         this.setName(name, character);
 

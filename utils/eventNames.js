@@ -8,5 +8,4 @@ export default class DefaultEventNames {
 
     static startChoiceNode = "startChoiceNode";
     static selectChoiceNode = "selectChoiceNode"
-
 }

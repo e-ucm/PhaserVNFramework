@@ -40,10 +40,6 @@ export default class SceneManager extends Singleton {
 
     /**
     * Ejecutar una escena en paralelo al resto
-    * 
-    * NO SE GUARDA EN LAS ESCENAS ACTUALES, POR LO QUE PARA GESTIONARLA 
-    * HACE FALTA HACER UN GET PRIMERO Y LUEGO HACER LO QUE SEA CON ELLA
-    * 
     * @param {String} sceneKey - key de la escena a ejecutar en paralelo
     */
     runInParallel(sceneKey) {
@@ -152,7 +148,7 @@ export default class SceneManager extends Singleton {
 
     
     /**
-    * Detener y borrar todas las escenas indicadas
+    * Detener y borrar todas las escenas indicadas que no sean la escena que se esta ejecutando
     * @param {Array} sceneArray - array con las escenas a detener
     */
     clearScenes(sceneArray) {

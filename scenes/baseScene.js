@@ -44,37 +44,28 @@ export default class BaseScene extends Phaser.Scene {
 
 
     /**
-    * Se llama al terminar de crear la escena. Se encarga de llamar initialSetup
-    * @param {Object} params - objeto con los parametros que pasarle a initialSetup 
+    * Se llama al terminar de crear la escena
+    * @param {Object} params - parametros adicionales que pasar a la funcion (opcional)
     */
-    onCreate(params) {
-        this.initialSetup(params);
-    }
+    onCreate(params) { }
 
     /**
-    * Se llama al despertar la escena. Se encarga de llamar initialSetup
-    * @param {Object} params - objeto con los parametros que pasarle a initialSetup 
+    * Se llama al despertar la escena
+    * @param {Object} params - parametros adicionales que pasar a la funcion (opcional)
     */
-    onWake(params) {
-        this.initialSetup(params);
-    }
+    onWake(params) { }
 
     /**
-    * Limpia los eventos del dispatcher
+    * Se llama al detener la escena. Elimina la blackboard del localizationManager y limpia los eventos del dispatcher
+    * @param {Object} params - parametros adicionales que pasar a la funcion (opcional)
     */
-    shutdown() {
+    shutdown(params) {
         this.localizationManager.unsubscribeBlackboard(this.blackboard);
 
         if (this.dispatcher != null) {
             this.dispatcher.removeByObject(this);
         }
     }
-
-    /**
-    * Se encarga de configurar la escena con los parametros iniciales y
-    * @param {Object} params - parametros que se le pasan a la configuracion inicial 
-    */
-    initialSetup(params) { }
 
     setInteractive(gameObject, config = {}) {
         setInteractive(gameObject, config);
