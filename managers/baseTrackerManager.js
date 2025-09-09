@@ -23,13 +23,17 @@ export default class BaseTrackerManager extends Singleton {
     }
 
     sendInitializeDialog(name, dialog) {
-        this.seriousGameTracker.completable(`${name} ${dialog.replace(/\s\s+/g, ' ').trim()}`, this.seriousGameTracker.COMPLETABLETYPE.STORYNODE)
+        // \s+ --> encuentra uno o mas espacios en blanco
+        // /g --> encuentra todas las coincidencias en el string en vez de pararse en la primera
+        this.seriousGameTracker.completable(`${name} ${dialog.replace(/\s+/g, ' ').trim()}`, this.seriousGameTracker.COMPLETABLETYPE.STORYNODE)
             .initialized()
             .send();
     }
 
     sendCompleteDialog(name, dialog) {
-        this.seriousGameTracker.completable(`${name} ${dialog.replace(/\s\s+/g, ' ').trim()}`, this.seriousGameTracker.COMPLETABLETYPE.STORYNODE)
+        // \s+ --> encuentra uno o mas espacios en blanco
+        // /g --> encuentra todas las coincidencias en el string en vez de pararse en la primera
+        this.seriousGameTracker.completable(`${name} ${dialog.replace(/\s+/g, ' ').trim()}`, this.seriousGameTracker.COMPLETABLETYPE.STORYNODE)
             .completed(true, true, 1)
             .send();
     }

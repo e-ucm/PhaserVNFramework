@@ -86,9 +86,6 @@ export default class TextNode extends DialogNode {
 
         // Si hay dialogos
         if (this.dialogs.length > 0) {
-            // TRACKER EVENT
-            this.trackerManager.sendInitializeDialog(this.name, this.dialogs[this.currDialog]);
-
             // Se lanza el evento de empezar nodo de texto
             this.dispatcher.dispatch(DefaultEventNames.startTextNode, this);
 
