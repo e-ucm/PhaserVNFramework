@@ -43,7 +43,7 @@ export default class RectImageButton extends InteractiveContainer {
         let imageY = this.rect.y + this.rect.displayHeight * (0.5 - rectOriginY);
 
         if (imgAtlas === "") {
-            this.image = new ImageArea(scene, imageX, imageY, width, height, imgId, imgId, imgOriginX, imgOriginY)
+            this.image = new ImageArea(scene, imageX, imageY, width, height, imgAtlas, imgId, imgOriginX, imgOriginY)
             this.image.setScale(2);
             this.image.setAlpha(imgAlpha);
         }
