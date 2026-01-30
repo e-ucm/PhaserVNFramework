@@ -32,7 +32,7 @@ export default class InteractiveContainer extends AnimatedContainer {
         // para que no se pueda interactuar mientras se esta reproduciendo
         if (active) {
             this.fadeAnim.on("complete", () => {
-                this.setInteractive();
+                setInteractive(this);
             });
         }
     }
