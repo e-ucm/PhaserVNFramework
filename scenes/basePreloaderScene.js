@@ -20,7 +20,8 @@ export default class BasePreloaderScene extends Phaser.Scene {
                 files: [{
                     type: "plugin",
                     key: BasePreloaderScene.REX_TEXT_TRANSLATION_PLUGIN_KEY,
-                    url: "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rextexttranslationplugin.min.js",
+                    url: './src/framework/lib/rextexttranslationplugin.min.js',
+                    // url: "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rextexttranslationplugin.min.js",
                     start: true,
                     mapping: "translation"
                 }]
