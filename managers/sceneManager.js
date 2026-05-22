@@ -120,8 +120,9 @@ export default class SceneManager extends Singleton {
                 this.clearRunningScenes();
             }
 
-            // Se guarda la escena a las escenas que estan ejecutandose
             let wasRunning = this.runningScenes.has(this.currentScene)
+            
+            // Se guarda la escena a las escenas que estan ejecutandose
             this.runningScenes.add(this.currentScene);
 
             if (anim) {
@@ -154,19 +155,19 @@ export default class SceneManager extends Singleton {
     
     /**
     * Detener y borrar todas las escenas indicadas que no sean la escena que se esta ejecutando
-    * @param {Array} sceneArray - array con las escenas a detener
+    * @param {Set} sceneSet - set con las escenas a detener (tiene que ser un Set para poder eliminar elementos mientras se itera por ellos)
     */
-    clearScenes(sceneArray) {
-        sceneArray.forEach(sc => {
+    clearScenes(sceneSet) {
+        sceneSet.forEach(sc => {
             if (sc != this.currentScene) {
                 // Si la escena tiene el metodo shutdown, se llama a su shutdown antes de detenerla 
                 if (sc.shutdown != null && typeof sc.shutdown === "function") {
                     sc.shutdown();
                 }
+                sceneSet.delete(sc);
                 this.stopScene(sc);
             }
         });
-        sceneArray.clear();
     }
 
     clearRunningScenes() {
