@@ -124,10 +124,6 @@ export default class BaseUI extends BaseScene {
     }
 
     startTextNode(node) {
-        // TRACKER EVENT
-        // Se envia el evento de inicio de dialogo una vez que ya se ha partido el texto en trozos
-        this.trackerManager.sendInitializeDialog(node.name, node.dialogs[node.currDialog]);
-
         // Si la caja era visible y el personaje anterior es distinto al actual,
         // se desactiva la caja y se vuelve a activar con el nombre nuevo
         if (this.textbox.visible && this.textbox.lastCharacter != node.character) {
