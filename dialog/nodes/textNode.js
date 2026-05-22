@@ -86,22 +86,20 @@ export default class TextNode extends DialogNode {
 
         // Si hay dialogos
         if (this.dialogs.length > 0) {
+            this.trackerManager.sendInitializeDialog(this.name, this.fullId);
             // Se lanza el evento de empezar nodo de texto
             this.dispatcher.dispatch(DefaultEventNames.startTextNode, this);
 
             // Se escucha el evento de siguiente dialogo
             this.dispatcher.add(DefaultEventNames.nextDialog, this, () => {
-                // TRACKER EVENT
-                this.trackerManager.sendCompleteDialog(this.name, this.dialogs[this.currDialog]);
-
                 // Se actualiza el dialogo
                 this.currDialog++;
-
+                if (this.currDialog == this.dialogs.length) {
+                    this.trackerManager.sendCompleteDialog(this.name, this.fullId);
+                }
+                
                 // Si sigue habiendo mas dialogos, se lanza el evento de pasar al siguiente dialogo
                 if (this.currDialog < this.dialogs.length) {
-                    // TRACKER EVENT
-                    this.trackerManager.sendInitializeDialog(this.name, this.dialogs[this.currDialog]);
-
                     this.dispatcher.dispatch(DefaultEventNames.updateTextNode, this);
                 }
                 // Si no, pasa al siguiente nodo
